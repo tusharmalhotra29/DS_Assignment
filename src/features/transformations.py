@@ -169,7 +169,7 @@ def driver_historical_completed_bookings(df: pd.DataFrame, target_col: str = "is
 
     if target_exists:  # TRAINING MODE
         from sklearn.feature_selection import SelectKBest, f_classif
-        selector = SelectKBest(score_func=f_classif, k=5)
+        selector = SelectKBest(score_func=f_classif, k=3)
         selector.fit(X_scaled, y)
 
         selected_features = X_scaled.columns[selector.get_support()].tolist()
@@ -189,8 +189,11 @@ def driver_historical_completed_bookings(df: pd.DataFrame, target_col: str = "is
             raise ValueError("Selected features file not found. Please train the model first.")
 
         # Only keep features that exist in the dataset (safe check)
-        if "trip_distance" not in selected_features:
-                selected_features.append("trip_distance")
+    # Ensure all expected features exist in test data, add if missing
+        for feat in ["trip_distance", "driver_cancellation_rate", "acceptance_rate", "driver_completed_ratio"]:
+            if feat not in selected_features and feat in X_scaled.columns:
+                selected_features.append(feat)
+
         selected_features = [f for f in selected_features if f in X_scaled.columns]
 
         # Return scaled features limited to selected features

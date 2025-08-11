@@ -1,4 +1,4 @@
-features=["trip_distance","driver_distance","driver_cancellation_rate","acceptance_rate","driver_completed_ratio"]
+features=["driver_cancellation_rate","acceptance_rate","driver_completed_ratio"]
 target="is_completed"
 test_size=0.2
 
